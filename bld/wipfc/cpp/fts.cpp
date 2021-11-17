@@ -132,19 +132,19 @@ void FTSElement::encode( std::vector< STD1::uint8_t >& rle )
     ConstPageIter tst( pages.begin() );
     ConstPageIter itr( pages.begin() + 1 );
     bool same( *itr == *tst  && *( itr + 1) == *tst  );
-    size_t sameCount( 2 );
+    size_t sameCount( 1 );              // 2021-11-16 SHL was 2 - oops
     while( itr != pages.end() ) {
         if( same ) {
             if( *itr != *tst ) {
                 --sameCount;
-                if( sameCount < 0x80 ) {
+                if( sameCount < 128 ) {
                     rle.push_back( static_cast< STD1::uint8_t >( sameCount ) );
                     rle.push_back( *tst );
                 }
                 else {
                     //sameCount will never exceed 65536 because the number of pages
                     //must be less than 65536 (it's stored in a STD1::uint16_t)
-                    rle.push_back( 0x80 );
+                    rle.push_back( 0x80 );      // tag
                     rle.push_back( *tst );
                     rle.push_back( static_cast< STD1::uint8_t >( sameCount ) );
                     rle.push_back( static_cast< STD1::uint8_t >( sameCount >> 8 ) );
@@ -161,8 +161,9 @@ void FTSElement::encode( std::vector< STD1::uint8_t >& rle )
                 size_t difSize( dif.size() );
                 STD1::uint8_t code( 0xFF );
                 while( difSize > 128 ) {
-                    rle.push_back( code );
-                    for( size_t count = 0; count <= 128; ++count ) {
+                    rle.push_back( code );      // tag count = 128
+                    // 2021-11-13 SHL Correct off by one
+                    for( size_t count = 0; count < 128; ++count ) {
                         rle.push_back( *byte );
                         ++byte;
                     }
@@ -172,7 +173,7 @@ void FTSElement::encode( std::vector< STD1::uint8_t >& rle )
                     if( difSize > 1 )
                         code = static_cast< STD1::uint8_t >( difSize - 1 ) | 0x80;
                     else
-                        code = 0;
+                        code = 0;       // count is 1
                     rle.push_back( code );
                     for( size_t count = 0; count < difSize; ++count ) {
                         rle.push_back( *byte );
@@ -210,20 +211,24 @@ void FTSElement::encode( std::vector< STD1::uint8_t >& rle )
         STD1::uint8_t code( 0xFF );
         while( difSize > 128 ) {
             rle.push_back( code );
-            for( size_t count = 0; count <= 128; ++count ) {
+            // 2021-11-12 SHL correct off by one counting
+            for( size_t count = 0; count < 128; ++count ) {
                 rle.push_back( *byte );
                 ++byte;
             }
             difSize -= 128;
         }
-        if( difSize > 1 )
-            code = static_cast< STD1::uint8_t >( difSize - 1 ) | 0x80;
-        else
-            code = 0;
-        rle.push_back( code );
-        for( size_t count = 0; count < difSize; ++count ) {
-            rle.push_back( *byte );
-            ++byte;
+        // 2021-11-12 SHL Do nothing if byte array empty
+        if( difSize > 0 ) {
+          if( difSize > 1 )
+              code = static_cast< STD1::uint8_t >( difSize - 1 ) | 0x80;
+          else
+              code = 0;                 // byte array size = 1
+          rle.push_back( code );
+          for( size_t count = 0; count < difSize; ++count ) {
+              rle.push_back( *byte );
+              ++byte;
+          }
         }
     }
 }
