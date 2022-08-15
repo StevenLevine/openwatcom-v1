@@ -105,7 +105,7 @@ static  char    *os2_386_msg[] = {
     "4offset of resource table                          = ",
     "4# of resource entries                             = ",
     "4offset of resident name table                     = ",
-    "4offset of entry table                             = ",
+    "4offset of entry point table                       = ",
     "4offset of module directive table                  = ",
     "4# of module directives                            = ",
     "4offset of fixup page table                        = ",
@@ -114,7 +114,7 @@ static  char    *os2_386_msg[] = {
     "4# of entries in import module name table          = ",
     "4offset of import procedure name table             = ",
     "4offset of per-page checksum table                 = ",
-    "4offset of enumerated data pages                   = ",
+    "4offset of enumerated data pages (rel file)        = ",
     "4# of pre-load pages                               = ",
     "4offset of non-resident names table (rel file)     = ",
     "4size of non-resident names table                  = ",
@@ -336,7 +336,7 @@ static void dmp_obj_page( object_record obj )
     for( j = 0; j < obj.mapsize; ++j ) {
         Data_count++;
         Wdputs( "    page # " );
-        Putdecbz( Data_count, 3 );
+        Putdecbz( Data_count, 5 );      // 2020-07-13 SHL Bump 3 to 5 for huge binaries
         Wdputs( "  map page = " );
         switch( Form ) {
         case FORM_LE:
