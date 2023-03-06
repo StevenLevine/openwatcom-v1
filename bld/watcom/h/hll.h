@@ -325,7 +325,8 @@ typedef struct {
 } hl4_linnum_first_path;
 
 
-#if 0
+// 2021-09-18 SHL Restored
+
 typedef struct {
     unsigned_32 firstChar;
     unsigned_32 numChars;
@@ -333,8 +334,9 @@ typedef struct {
 } hl4_filetab_entry;
 
 
+// 2021-09-18 SHL FIXME to be gone or whatever
+#if 0
 /* HLL version 3 (HL03) specific line number information */
-
 
 typedef struct {
     unsigned_32 srcStart;
@@ -380,7 +382,7 @@ typedef enum SSR {
 } hll_ssr;
 
 
-/* HLL language types (for hll_cuinfo::language). */
+/* HLL language types (for hll_cu_info::language). */
 typedef enum {
     HLL_LANG_C = 1,
     HLL_LANG_CPP,
@@ -400,6 +402,7 @@ typedef struct {
 
 /* HLL begin block ({). */
 typedef struct {
+    hll_ssr_common  common;             // 2021-09-18 SHL Added
     unsigned_32     offset;             /* Offset into the current segment. */
     unsigned_32     len;                /* Length of the block. */
     unsigned_8      name_len;           /* Length of the block name (usually 0). */
@@ -516,6 +519,7 @@ typedef enum {
     HLL_REG_IP,
     HLL_REG_FLAGS,
     HLL_REG_EFLAGS,
+
     /* x87 */
     HLL_REG_ST0 = 0x80,
     HLL_REG_ST1,
@@ -560,7 +564,7 @@ typedef struct {
 typedef struct {
     hll_ssr_common  common;
     unsigned_16     seg;                /* The new default segment index. */
-    //unsigned_8      reserved;         /* FIXME: don't know the size! */
+    unsigned_16     reserved;           /* 2021-09-19 SHL FIXME to be sure about size! */
 } hll_ssr_change_seg;
 
 /* HLL typedef. */
@@ -650,11 +654,11 @@ typedef struct {
     hll_ssr_common  common;
     unsigned_8      language;       /* hll_lang */
     unsigned_8      options_len;
-    char            options[1];
-    // unsigned_8      compiler_date_len;
-    // char            compiler_date[1];
-    // DATETIME        timestamp; /* DosGetDateTime() */
-} hll_ssr_cuinfo;
+    char            options[1];                 /* length varies */
+    // unsigned_8      compiler_date_len;       /* offset varies */
+    // char            compiler_date[1];        /* offset and length varies */
+    // DATETIME        timestamp; /* DosGetDateTime() offset varies */
+} hll_ssr_cu_info;
 
 /* HLL auto scoped. */
 typedef struct {
@@ -691,7 +695,7 @@ typedef union {
     hll_ssr_static          static_;
     hll_ssr_static2         static2;
     hll_ssr_tls             tls;
-    hll_ssr_code_label      code_lable;
+    hll_ssr_code_label      code_label;
     hll_ssr_reg             reg;
     hll_ssr_reg_relative    reg_relative;
     hll_ssr_constant        constant;
@@ -706,7 +710,7 @@ typedef union {
     hll_ssr_tag2            tag2;
     hll_ssr_map             map;
     hll_ssr_table           table;
-    hll_ssr_cuinfo          cuinfo;
+    hll_ssr_cu_info         cu_info;
     hll_ssr_auto_scoped     auto_scoped;
     hll_ssr_static_scoped   static_scoped;
 } hll_ssr_all;
