@@ -137,18 +137,19 @@ unsigned DIPENTRY DIPImpModName( imp_image_handle *ii, imp_mod_handle im,
 /*
  * Gets the compiler unit infomation record (unit = module, so for a module).
  */
-hll_ssr_cuinfo *GetCompInfo( imp_image_handle *ii, imp_mod_handle im )
+hll_ssr_cu_info *GetCompInfo( imp_image_handle *ii, imp_mod_handle im )
 {
+    // 2023-11-18 SHL correct hll_ssr_cu_info typo
     hll_dir_entry *hdd = hllFindDirEntry( ii, im, hll_sstSymbols );
     if( hdd != NULL ) {
         virt_mem        pos = hdd->lfo;
         const virt_mem  end = pos + hdd->cb;
         while( pos < end ) {
-            hll_ssr_cuinfo *cuinfo = VMRecord( ii, pos, &pos, NULL );
-            if( cuinfo != NULL
-             || cuinfo->common.code == HLL_SSR_CU_INFO ) {
+            hll_ssr_cu_info *cu_info = VMRecord( ii, pos, &pos, NULL );
+            if( cu_info != NULL
+             || cu_info->common.code == HLL_SSR_CU_INFO ) {
                 //FIXME: check CV3 format!
-                return cuinfo;
+                return cu_info;
             }
         }
     }
@@ -160,9 +161,10 @@ hll_ssr_cuinfo *GetCompInfo( imp_image_handle *ii, imp_mod_handle im )
  */
 char *DIPENTRY DIPImpModSrcLang( imp_image_handle *ii, imp_mod_handle im )
 {
-    hll_ssr_cuinfo *cuinfo = GetCompInfo( ii, im );
-    if( cuinfo != NULL ) {
-        switch( cuinfo->language ) {
+    // 2023-11-18 SHL correct hll_ssr_cu_info typo
+    hll_ssr_cu_info *cu_info = GetCompInfo( ii, im );
+    if( cu_info != NULL ) {
+        switch( cu_info->language ) {
         case HLL_LANG_C:        return( "c" );
         case HLL_LANG_CPP:      return( "cpp" );
 #if 1 /* additional */

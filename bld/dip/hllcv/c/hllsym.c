@@ -108,8 +108,9 @@ static dip_status hllSymGetName( imp_image_handle *ii, imp_sym_handle *is,
         }
         break;
     case HLL_SSR_CODE_LABEL:
-        *lenp = ssr->code_lable.name_len;
-        *namep = ssr->code_lable.name;
+        // 2023-11-18 SHL  Correct code_label typo
+        *lenp = ssr->code_label.name_len;
+        *namep = ssr->code_label.name;
         break;
     case HLL_SSR_PUBLIC:
         *lenp = ssr->public_.name_len;
@@ -395,7 +396,7 @@ dip_status hllSymLocation( imp_image_handle *ii, imp_sym_handle *is,
             break;
 
         case HLL_SSR_CODE_LABEL:
-            addr.mach.offset = ssr->code_lable.offset;
+            addr.mach.offset = ssr->code_label.offset;
             addr.mach.segment = is->segment;
             break;
 
