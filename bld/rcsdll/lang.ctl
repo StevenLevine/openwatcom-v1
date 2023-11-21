@@ -19,7 +19,8 @@ cdsay .
 [ BLOCK <1> rel2 cprel2 ]
 #========================
   [ IFDEF (os_dos "") <2*> ]
-    <CPCMD> <PROJDIR>/wini86/rcsdll.dll  <RELROOT>/binw/rcsdll.dll
+    # 2023-11-18 SHL Not built if rel2 os_dos
+    <CCCMD> <PROJDIR>/wini86/rcsdll.dll  <RELROOT>/binw/rcsdll.dll
     <CPCMD> <PROJDIR>/bat/*.bat          <RELROOT>/binw/
 
   [ IFDEF (os_os2 "") <2*> ]

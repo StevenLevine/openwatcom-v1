@@ -19,13 +19,16 @@ cdsay .
 [ BLOCK <1> rel2 cprel2 ]
 #========================
   [ IFDEF (os_dos "") <2*> ]
-    <CPCMD> <PROJDIR>/dosi86/wsample.exe      <RELROOT>/binw/wsample.exe
+    # 2023-11-18 SHL not built if rel2 os_dos
+    <CCCMD> <PROJDIR>/dosi86/wsample.exe      <RELROOT>/binw/wsample.exe
     <CCCMD> <PROJDIR>/rsii86/wsamprsi.exe     <RELROOT>/binw/wsamprsi.exe
     <CCCMD> <PROJDIR>/pls386/wsamppls.exp     <RELROOT>/binw/wsamppls.exp
-    <CPCMD> <PROJDIR>/wini86/wsamplew.exe     <RELROOT>/binw/wsamplew.exe
+    # 2023-11-18 SHL not built if rel2 os2_dos
+    <CCCMD> <PROJDIR>/wini86/wsamplew.exe     <RELROOT>/binw/wsamplew.exe
 
   [ IFDEF (os_os2 "") <2*> ]
-#    <CPCMD> <PROJDIR>/os2i86/wsampos2.exe     <RELROOT>/binp/wsampos2.exe
+    # 2023-11-18 SHL not built if rel2 os_os2
+    <CCCMD> <PROJDIR>/os2i86/wsampos2.exe     <RELROOT>/binp/wsampos2.exe
     <CPCMD> <PROJDIR>/os2386/wsmpos22.exe     <RELROOT>/binp/wsample.exe
 
   [ IFDEF (os_nt "") <2*> ]

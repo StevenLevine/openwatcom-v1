@@ -38,7 +38,8 @@ cdsay .
 
   [ IFDEF (os_dos "") <2*> ]
     <CPCMD> bviper/dos386/ide2make.exe <RELROOT>/binw/
-    <CPCMD> cfg/wini86/idex.cfg  <RELROOT>/binw/
+    # 2023-11-19 SHL Not built for rel2 os_dos
+    <CCCMD> cfg/wini86/idex.cfg  <RELROOT>/binw/
 
   [ IFDEF (os_win "") <2*> ]
     <CPCMD> viper/wini86/ide.exe <RELROOT>/binw/
