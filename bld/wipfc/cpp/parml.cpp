@@ -106,6 +106,16 @@ Lexer::Token Parml::parse( Lexer* lexer )
                                 document->dataLine(), document->dataCol() ) );
                         return tok;
                     }
+                case Lexer::PARML:
+                {
+                    Element* elt( new Parml( document, this, document->dataName(),
+                        document->dataLine(), document->dataCol(), nestLevel + 1,
+                        indent == 1 ? 4 : indent + 4 ) );
+                    appendChild( elt );
+                    tok = elt->parse( lexer );
+                    //needLine = true;
+                }
+                break;
                 case Lexer::SL:
                     {
                         Element* elt( new Sl( document, this, document->dataName(),
